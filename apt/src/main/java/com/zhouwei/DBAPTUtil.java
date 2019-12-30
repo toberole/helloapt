@@ -57,7 +57,7 @@ public class DBAPTUtil extends AbstractProcessor {
             es.add(e);
         }
 
-        System.out.print("dbs size: "+dbs.size());
+        System.out.println("dbs size: "+dbs.size());
 
         for (Element element : elements) {
             MethodSpec constructor = MethodSpec.constructorBuilder()
