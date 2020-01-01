@@ -6,6 +6,9 @@ apply plugin: 'com.android.application'
 // apply plugin: 'com.cat.zeus.demo'
 apply plugin: 'com.cat.zeus.gradle'
 
+//testCreateJavaConfig {
+//    str = '动态生成Java类'
+//}
 
 android {
     compileSdkVersion 26

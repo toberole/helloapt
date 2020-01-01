@@ -317,6 +317,12 @@ Visitor API则将通过接口的方式，分离读class和写class的逻辑，�
 
 
 
+public class CreateJavaExtension {
+    def str = "动态生成Java类的字符串"
+}
+
+
+
 
 
 
