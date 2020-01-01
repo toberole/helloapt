@@ -10,6 +10,11 @@ apply plugin: 'com.cat.zeus.gradle'
 //    str = '动态生成Java类'
 //}
 
+//pluginsrc{
+//    message = 'hello gradle plugin'
+//    cost = true
+//}
+
 android {
     compileSdkVersion 26
     defaultConfig {

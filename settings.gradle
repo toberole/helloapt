@@ -1,1 +1,1 @@
-include ':app', ':apt', ':anno', ':asm'
+include ':app', ':apt', ':anno', ':ByteCodeOP'

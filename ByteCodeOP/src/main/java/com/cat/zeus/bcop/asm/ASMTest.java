@@ -1,4 +1,4 @@
-package com.cat.zeus.asm;
+package com.cat.zeus.bcop.asm;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -6,11 +6,15 @@ import org.objectweb.asm.ClassWriter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-public class MyClass {
+public class ASMTest {
     public static void main(String[] args) {
         System.out.println("****** main ******");
-        String inputPath = "D:\\code\\android\\helloapt\\asm\\build\\classes\\java\\main\\com\\cat\\zeus\\asm\\Test.class";
-        String outPath = "D:\\code\\android\\helloapt\\asm\\build\\classes\\java\\main\\com\\cat\\zeus\\asm\\Test1.class";
+
+    }
+
+    public static void test1(){
+        String inputPath = "D:\\code\\android\\helloapt\\ByteCodeOP\\build\\classes\\java\\main\\com\\cat\\zeus\\bcop\\A.class";
+        String outPath = "D:\\code\\android\\helloapt\\ByteCodeOP\\build\\classes\\java\\main\\com\\cat\\zeus\\bcop\\Test1.class";
         copy(inputPath, outPath);
     }
 

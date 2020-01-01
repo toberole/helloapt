@@ -1,4 +1,4 @@
-package com.cat.zeus.asm;
+package com.cat.zeus.bcop.asm;
 
 
 import org.objectweb.asm.ClassVisitor;

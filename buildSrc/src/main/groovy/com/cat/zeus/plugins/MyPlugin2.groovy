@@ -6,14 +6,9 @@ import com.android.build.gradle.AppPlugin
 import org.gradle.api.Project
 
 class MyPlugin2 extends BasePlugin {
-
     @Override
     void apply(Project project) {
         super.apply(project)
-
-        System.out.println("----------------Begin----------------")
-        System.out.println("This is out custom plugin.")
-
         // 创建一个 Extension
         project.extensions.create("testCreateJavaConfig", CreateJavaExtension)
 
@@ -50,8 +45,6 @@ class MyPlugin2 extends BasePlugin {
                 }
             }
         }
-
-        System.out.println("----------------Has it finished?----------------")
     }
 
     static void createJavaTest(variant, config) {

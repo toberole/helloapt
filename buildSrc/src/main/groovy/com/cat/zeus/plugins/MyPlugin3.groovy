@@ -8,8 +8,16 @@ import com.android.build.api.transform.TransformInput
 import com.android.build.api.transform.TransformInvocation
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.io.FileUtils
+import org.gradle.api.Project
 
 class MyPlugin3 extends BasePlugin {
+    @Override
+    void apply(Project project) {
+        super.apply(project)
+
+
+    }
+
     @Override
     void transform(TransformInvocation transformInvocation) throws TransformException, InterruptedException, IOException {
         super.transform(transformInvocation)
