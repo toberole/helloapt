@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$/anno" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/apt" />
+            <option value="$PROJECT_DIR$/asm" />
             <option value="$PROJECT_DIR$/buildSrc" />
           </set>
         </option>

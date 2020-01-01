@@ -1,8 +1,11 @@
 apply plugin: 'com.android.application'
 
 // 两种写法
-apply plugin: 'com.cat.zeus.second'
+// apply plugin: 'com.cat.zeus.second'
 // apply plugin: com.cat.zeus.plugins.SecondPlugin
+// apply plugin: 'com.cat.zeus.demo'
+apply plugin: 'com.cat.zeus.gradle'
+
 
 android {
     compileSdkVersion 26
