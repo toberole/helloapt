@@ -6,14 +6,10 @@ apply plugin: 'com.android.application'
 // apply plugin: 'com.cat.zeus.demo'
 apply plugin: 'com.cat.zeus.gradle'
 
-//testCreateJavaConfig {
-//    str = '动态生成Java类'
-//}
-
-//pluginsrc{
-//    message = 'hello gradle plugin'
-//    cost = true
-//}
+// 插件可以获取配置的参数
+AppMypluginExtension {
+    test = 'hhhhhh'
+}
 
 android {
     compileSdkVersion 26

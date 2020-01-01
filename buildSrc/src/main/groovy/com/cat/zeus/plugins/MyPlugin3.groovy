@@ -11,16 +11,30 @@ import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
 
 class MyPlugin3 extends BasePlugin {
+    MypluginExtension mypluginExtension
+
     @Override
     void apply(Project project) {
         super.apply(project)
+        // 通过脚本配置参数
+        // Groovy脚本的Extension，实际上就是类似于Gradle的配置信息，
+        // 在主项目使用自定义的Gradle插件时，
+        // 可以在主项目的build.gradle脚本中通过Extension来传递一些配置、参数。
+        // 创建一个Extension，只需要创建一个Groovy类即可
+        mypluginExtension = project.extensions.create('AppMypluginExtension', MypluginExtension)
 
-
+        project.task("testPlugin")<<{
+            System.out.println("hello test plugin")
+        }
     }
 
     @Override
     void transform(TransformInvocation transformInvocation) throws TransformException, InterruptedException, IOException {
         super.transform(transformInvocation)
+        // 获取脚本配置的参数
+        System.out.println("AppMypluginExtension: " + project.AppMypluginExtension.test)
+        System.out.println("AppMypluginExtension: " + mypluginExtension.test)
+
         // Transform 的 inputs 分为两种类型
         // 一种是目录
         // 一种是 jar包[依赖的jar包或者是自建的moudle]
@@ -30,6 +44,7 @@ class MyPlugin3 extends BasePlugin {
                 // 在MainActivity的onCreate()方法之前注入代码
                 MyInject.injectOnCreate(dirInput.file.absolutePath, project)
                 // 获取 output 目录
+                // getContentLocation方法相当于创建一个对应名称表示的目录
                 def dest = transformInvocation.outputProvider.getContentLocation(
                         dirInput.name, dirInput.contentTypes,
                         dirInput.scopes, Format.DIRECTORY
