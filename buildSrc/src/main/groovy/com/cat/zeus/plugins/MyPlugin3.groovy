@@ -23,7 +23,7 @@ class MyPlugin3 extends BasePlugin {
         // 创建一个Extension，只需要创建一个Groovy类即可
         mypluginExtension = project.extensions.create('AppMypluginExtension', MypluginExtension)
 
-        project.task("testPlugin")<<{
+        project.task("testPlugin") << {
             System.out.println("hello test plugin")
         }
     }
@@ -82,3 +82,16 @@ class MyPlugin3 extends BasePlugin {
      * 这一步必须执行，不让编译会报错
      */
 }
+
+//public void transform(TransformInvocation invocation) {
+//    for (TransformInput input : invocation.getInputs()) {
+//        input.getJarInputs().parallelStream().forEach(jarInput -> {
+//                File src = jarInput.getFile() ;
+//                JarFile jarFile = new JarFile(file) ;
+//                Enumeration<JarEntry> entries = jarFile.entries() ;
+//        while (entries.hasMoreElements()) {
+//            JarEntry entry = entries.nextElement();
+//            //处理
+//        }
+//    }
+//}

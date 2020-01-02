@@ -9,7 +9,6 @@
 
 javapote的学习：
 
-
 javapoet里面常用的几个类：
 
     MethodSpec 代表一个构造函数或方法声明。
@@ -314,13 +313,14 @@ Visitor API则将通过接口的方式，分离读class和写class的逻辑，�
 上面这两种解析文件结构的方式在很多处理结构化数据时都常见，一般得看需求背景选择合适的方案，而我们的需求是这样的，出于某个目的，寻找class文件中的一个hook点，进行字节码修改，这种背景下，我们选择Visitor API的方式比较合适。
 
 
-
-
-
-public class CreateJavaExtension {
-    def str = "动态生成Java类的字符串"
-}
-
+创建buildSrc方法
+1、直接创建buildSrc文件夹，
+2、创建src文件夹，
+3、创建main文件夹，
+4、创建groovy文件夹，在这里面写自定义plugin
+5、创建resources文件夹，接着META-INF，接着gradle-plugins，
+在文件夹gradle-plugins里面新建一个com.kalengo.customplugin.properties，里面写名称implementation-class=CustomPlugin
+这两个名称在app的build.gradle引用plugin的时候是两种写法，一种是包名，一种是id
 
 
 

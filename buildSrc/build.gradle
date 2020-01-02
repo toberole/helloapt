@@ -1,14 +1,19 @@
 apply plugin: 'groovy'
 apply plugin: 'java'
 
+ext {
+    android_gradle_plugin_version = '3.3.1'
+    javassist_version = '3.20.0-GA'
+}
+
 dependencies {
     compile gradleApi()
     compile localGroovy()
 
     // transform 时需要用到gradle tool的api，需要单独引入
-    implementation 'com.android.tools.build:gradle:3.3.1'
-    implementation 'com.android.tools.build:gradle-api:3.3.1'
-    implementation 'org.javassist:javassist:3.20.0-GA'
+    implementation "com.android.tools.build:gradle:${android_gradle_plugin_version}"
+    implementation "com.android.tools.build:gradle-api:${android_gradle_plugin_version}"
+    implementation "org.javassist:javassist:${javassist_version}"
 
 }
 

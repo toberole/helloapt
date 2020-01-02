@@ -6,6 +6,6 @@ public class A {
     }
 
     public void test_A1(int i) {
-        System.out.println("test A");
+        System.out.println("test A " + i);
     }
 }

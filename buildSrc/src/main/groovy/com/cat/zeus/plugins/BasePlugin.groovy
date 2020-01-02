@@ -9,6 +9,13 @@ import com.android.build.gradle.internal.pipeline.TransformManager
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
+/**
+ * 需要在transform加入复制文件的代码，作用是将class复制到dest的目录，
+ * 也就是说应用自定义transform后需要自己处理复制class文件的流程。
+ * 否则的话会出现打出来的包classes.dex是0字节
+ *
+ * 不管对class处理不处理，都要copy file
+ */
 class BasePlugin extends Transform implements Plugin<Project> {
     AppExtension android
     Project project
@@ -41,6 +48,15 @@ class BasePlugin extends Transform implements Plugin<Project> {
     @Override
     Set<? super QualifiedContent.Scope> getScopes() {
         return TransformManager.SCOPE_FULL_PROJECT
+    }
+
+    @Override
+    /**
+     * 只是想查看输入的内容,那么只需在getScopes()返回一个空集合，
+     * 在getReferencedScopes()返回想要接收的范围
+     */
+    Set<? super QualifiedContent.Scope> getReferencedScopes() {
+        return super.getReferencedScopes()
     }
 
     @Override
