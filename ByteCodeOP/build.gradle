@@ -1,0 +1,16 @@
+apply plugin: 'java-library'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // ASM
+    implementation 'org.ow2.asm:asm:5.1'
+    implementation 'org.ow2.asm:asm-util:5.1'
+    implementation 'org.ow2.asm:asm-commons:5.1'
+
+    // javassist
+    implementation 'org.javassist:javassist:3.20.0-GA'
+}
+
+sourceCompatibility = "7"
+targetCompatibility = "7"
