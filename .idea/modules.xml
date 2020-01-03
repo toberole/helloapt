@@ -8,6 +8,7 @@
       <module fileurl="file://$PROJECT_DIR$/apt/apt.iml" filepath="$PROJECT_DIR$/apt/apt.iml" />
       <module fileurl="file://$PROJECT_DIR$/buildSrc/buildSrc.iml" filepath="$PROJECT_DIR$/buildSrc/buildSrc.iml" />
       <module fileurl="file://$PROJECT_DIR$/helloapt.iml" filepath="$PROJECT_DIR$/helloapt.iml" />
+      <module fileurl="file://$PROJECT_DIR$/test_xxxx/test_xxxx.iml" filepath="$PROJECT_DIR$/test_xxxx/test_xxxx.iml" />
     </modules>
   </component>
 </project>

@@ -7,16 +7,20 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.cat.zeus.gradle'
 
 // 插件可以获取配置的参数
-AppMypluginExtension {
-    test = 'hhhhhh'
+//AppMypluginExtension {
+//    test = 'hhhhhh'
+//}
+
+ExtraInfo {
+    packageName = 'com.zhouwei'
 }
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 28
     defaultConfig {
         applicationId "com.zhouwei.helloapt"
         minSdkVersion 15
-        targetSdkVersion 26
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
     }
@@ -32,8 +36,9 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     annotationProcessor project(':apt')
     compile project(':anno')
+    compile project(':test_xxxx')
 
-    compile 'com.android.support:appcompat-v7:26.+'
+    compile 'com.android.support:appcompat-v7:28.0.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.1'
 }
 

@@ -1,0 +1,82 @@
+buildscript {
+	repositories {
+		jcenter()
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'com.android.tools.build:gradle:1.1.1'
+		classpath 'com.github.dcendents:android-maven-gradle-plugin:1.3'
+	}
+}
+
+plugins {
+    id "com.jfrog.bintray" version "1.5"
+}
+
+group = 'pub.devrel'
+version = '0.1'
+
+allprojects {
+	repositories {
+		jcenter()
+	}
+	apply plugin: 'com.github.dcendents.android-maven'
+}
+
+install {
+	repositories.mavenInstaller {
+		pom.project {
+			name 'EasyGoogle'
+			description 'A wrapper library for basic functions of Google Play Services APIs'
+			url 'https://github.com/googlesamples/easygoogle'
+			inceptionYear '2015'
+
+			packaging 'aar'
+			groupId 'pub.devrel'
+			artifactId 'android-maven-example'
+			version '0.1'
+
+			licenses {
+				license {
+					name 'The Apache Software License, Version 2.0'
+					url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+					distribution 'repo'
+				}
+			}
+			scm {
+				connection 'https://github.com/googlesamples/easygoogle.git'
+				url 'https://github.com/googlesamples/easygoogle'
+
+			}
+			developers {
+				developer {
+					name 'toberole'
+				}
+			}
+		}
+	}
+}
+
+bintray {
+	user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+	key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+	configurations = ['archives']
+
+	pkg {
+		repo = 'maven'
+		name = 'gradle-bintray-plugin-android-maven-example'
+		userOrg = user
+		licenses = ['Apache-2.0']
+		vcsUrl = 'https://github.com/bintray/gradle-bintray-plugin.git'
+		version {
+			name = '0.1'
+			desc = 'Gradle Bintray Plugin 1.0 final'
+			vcsTag = '0.1'
+			attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
+		}
+	}
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '2.4'
+}

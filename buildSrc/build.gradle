@@ -1,9 +1,12 @@
 apply plugin: 'groovy'
 apply plugin: 'java'
+apply plugin: 'maven'
+
 
 ext {
     android_gradle_plugin_version = '3.3.1'
     javassist_version = '3.20.0-GA'
+    asm_version = '5.1'
 }
 
 dependencies {
@@ -15,6 +18,11 @@ dependencies {
     implementation "com.android.tools.build:gradle-api:${android_gradle_plugin_version}"
     implementation "org.javassist:javassist:${javassist_version}"
 
+    // ASM
+    implementation "org.ow2.asm:asm:${asm_version}"
+    implementation "org.ow2.asm:asm-util:${asm_version}"
+    implementation "org.ow2.asm:asm-commons:${asm_version}"
+
 }
 
 repositories {
@@ -22,3 +30,12 @@ repositories {
     jcenter()
     mavenCentral()
 }
+
+//uploadArchives {
+//    repositories.mavenDeployer {
+//        repository(url: uri('../repo')) //仓库的路径，此处是项目根目录下的 repo 的文件夹
+//        pom.groupId = 'javassist.sample.yzk.zw.com'  //groupId ，自行定义，一般是包名
+//        pom.artifactId = 'modify' //artifactId ，自行定义
+//        pom.version = '1.0.0' //version 版本号
+//    }
+//}

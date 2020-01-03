@@ -6,6 +6,7 @@ import com.android.build.api.transform.JarInput
 import com.android.build.api.transform.TransformException
 import com.android.build.api.transform.TransformInput
 import com.android.build.api.transform.TransformInvocation
+import com.cat.zeus.plugins.exts.MypluginExtension
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Project

@@ -11,8 +11,8 @@ class MyInject1 {
     //注意这里需要替换你的anroid.jar路径
     static String androidJar = "D:\\Application\\Android\\sdkUpDate\\platforms\\android-24\\android.jar"
     static String myPackageName = "com.zjw.appmethodtime"
-    static String myCostTimeAnnotation = "@com.zjw.appmethodtime.CostTime"
-    static String CostTime = "CostTime"
+    static String myCostTimeAnnotation = "@com.zjw.appmethodtime.ExtraInfo"
+    static String CostTime = "ExtraInfo"
 
     public static void injectDir(String path, String packageName, boolean enabeCostTime) {
         pool.appendClassPath(path)
@@ -30,7 +30,7 @@ class MyInject1 {
                         && !filePath.contains('R$')
                         && !filePath.contains('R.class')
                         && !filePath.contains("BuildConfig.class")
-                        && !filePath.contains("CostTime")
+                        && !filePath.contains("ExtraInfo")
                 ) {
                     // 判断当前目录是否是在我们的应用包里面
                     int index = filePath.indexOf(packageName);
