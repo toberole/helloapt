@@ -18,7 +18,6 @@ import javassist.CtConstructor;
 import javassist.CtField;
 import javassist.CtMethod;
 import javassist.CtNewMethod;
-import javassist.LoaderClassPath;
 import javassist.expr.Cast;
 import javassist.expr.ConstructorCall;
 import javassist.expr.ExprEditor;
@@ -49,7 +48,7 @@ public class Test1 {
 
     public static void main(String[] args) {
         System.out.println("**************** main ****************");
-        op_jar();
+        test5();
     }
 
     private static void op_jar() {
@@ -121,9 +120,7 @@ public class Test1 {
             classPool.insertClassPath(path);
             CtClass ctClass = classPool.getCtClass("com.cat.zeus.bcop.A");
             CtMethod method = ctClass.getDeclaredMethod("m3");
-
             String name = method.getName();
-
             // 添加局部变量
             // 如果不同过addLocalVariable设置
             // 在调用属性时将出现compile error: no such field: startTime
@@ -136,6 +133,11 @@ public class Test1 {
             method.insertAfter("endTime = System.currentTimeMillis();");
             String s = "System.out.println(\"{0} total time: \" + (endTime - startTime));";
             method.insertAfter(MessageFormat.format(s, name));
+
+            // 添加try ... catch
+            CtClass eType = classPool.get("java.lang.Exception");
+            method.addCatch("{ System.out.println($e); throw $e; }", eType);
+
             ctClass.writeFile(tempDir);
             long endTime = System.currentTimeMillis();
             System.out.println(method.getName() + "total time: " + (endTime - startTime));
