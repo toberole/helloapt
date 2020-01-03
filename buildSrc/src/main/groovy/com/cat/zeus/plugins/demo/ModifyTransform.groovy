@@ -225,8 +225,8 @@ class ModifyTransform extends Transform {
                     method.addLocalVariable("endTime", CtClass.longType)
                     method.insertBefore("startTime = System.currentTimeMillis();")
                     method.insertAfter("endTime = System.currentTimeMillis();")
-                    String s = """android.util.Log.i("xxxx-plugin","{0} total time: " + (endTime - startTime));"""
-                    method.insertAfter(MessageFormat.format(s, name))
+                    String s = """android.util.Log.i("{0}","{1}#{2} total time: " + (endTime - startTime));"""
+                    method.insertAfter(MessageFormat.format(s, extraInfo.tag, ctClass.simpleName, name))
                 }
             }
         }
@@ -245,8 +245,8 @@ class ModifyTransform extends Transform {
                     method.addLocalVariable("endTime", CtClass.longType)
                     method.insertBefore("startTime = System.currentTimeMillis();")
                     method.insertAfter("endTime = System.currentTimeMillis();")
-                    String s = """android.util.Log.i("xxxx-plugin","{0} total time: " + (endTime - startTime));"""
-                    method.insertAfter(MessageFormat.format(s, name))
+                    String s = """android.util.Log.i("{0}","{1}#{2} total time: " + (endTime - startTime));"""
+                    method.insertAfter(MessageFormat.format(s, extraInfo.tag, ctClass.simpleName, name))
                 }
             }
         }
