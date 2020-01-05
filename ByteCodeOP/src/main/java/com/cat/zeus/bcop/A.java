@@ -18,4 +18,8 @@ public class A {
 
         System.out.println("i: " + i);
     }
+
+    public void m4() {
+        System.out.println("****** m4 ******");
+    }
 }

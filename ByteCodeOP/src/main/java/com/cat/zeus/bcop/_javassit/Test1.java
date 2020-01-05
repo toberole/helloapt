@@ -4,6 +4,7 @@ import com.cat.zeus.bcop.A;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
@@ -27,6 +28,10 @@ import javassist.expr.Instanceof;
 import javassist.expr.MethodCall;
 import javassist.expr.NewArray;
 import javassist.expr.NewExpr;
+import javassist.util.proxy.MethodFilter;
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyFactory;
+import javassist.util.proxy.ProxyObject;
 
 /**
  * Javassist的使用 首先获取到class定义的容器ClassPool，
@@ -48,7 +53,75 @@ public class Test1 {
 
     public static void main(String[] args) {
         System.out.println("**************** main ****************");
-        test5();
+        test7();
+    }
+
+    // 修改一个方法名字 在添加一个同名的方法
+
+    /**
+     * 实现runUIOnThread
+     * 第一步
+     * 修改带有UIThread注解方法，名字为method_extend
+     * 第二步
+     * 生成一个与带有UIThread注解方法一模一样的方法,在该方法中调用method_extend
+     */
+    public static void test7() {
+        try {
+            ClassPool pool = ClassPool.getDefault();
+            CtClass ctClass = pool.get("com.cat.zeus.bcop.A");
+            CtMethod origin_method = ctClass.getDeclaredMethod("m4");
+            String origin_method_name = origin_method.getName();
+
+
+            CtClass returnType = origin_method.getReturnType();
+            CtClass[] parameterTypes = origin_method.getParameterTypes();
+            CtMethod extend_method = new CtMethod(returnType, origin_method_name + "_extend", parameterTypes, ctClass);
+            extend_method.setModifiers(origin_method.getModifiers());
+            String s = "Looper looper = getMainLooper();Handler handler = new Handler(looper);handler.post(new Runnable() {public void run() {}});";
+            s = "System.out.println();";
+            s = "int i = 0;";
+            extend_method.setBody(s);
+            ctClass.addMethod(extend_method);
+            ctClass.writeFile(tempDir);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 注意java自带的proxy类只能代理实现了接口的类
+    // 使用Javassit代理没有实现接口的类实现aop，还可以使用开源的CGLib
+    public static void test6() {
+        try {
+            ClassPool pool = ClassPool.getDefault();
+            CtClass ctClass = pool.get("com.cat.zeus.bcop.A");
+            // 实例化代理工厂类
+            ProxyFactory factory = new ProxyFactory();
+            // 设置父类 factory会动态生成一个该类的子类
+            factory.setSuperclass(ctClass.toClass());
+            // 设置过滤 决定哪些方法需要拦截
+            factory.setFilter(new MethodFilter() {
+                @Override
+                public boolean isHandled(Method m) {
+                    return true;
+                }
+            });
+            // 创建代理类
+            Class clazz = factory.createClass();
+            // 实例化
+            final A a = (A) clazz.newInstance();
+            ((ProxyObject) a).setHandler(new MethodHandler() {
+                @Override
+                public Object invoke(Object self, Method thisMethod, Method proceed, Object[] args) throws Throwable {
+                    System.out.print(thisMethod.getName() + "被调用了 before");
+                    Object ret = proceed.invoke(self, args);
+                    System.out.print(thisMethod.getName() + "被调用了 after");
+                    return ret;
+                }
+            });
+            a.m1();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private static void op_jar() {
@@ -119,6 +192,7 @@ public class Test1 {
             String path = A.class.getResource("").getPath();
             classPool.insertClassPath(path);
             CtClass ctClass = classPool.getCtClass("com.cat.zeus.bcop.A");
+            // 获取方法
             CtMethod method = ctClass.getDeclaredMethod("m3");
             String name = method.getName();
             // 添加局部变量
