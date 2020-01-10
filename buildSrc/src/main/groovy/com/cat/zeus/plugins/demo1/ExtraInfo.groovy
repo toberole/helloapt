@@ -5,4 +5,5 @@ class ExtraInfo {
     String packageName = ""
     int wthreshold = 150
     int ethreshold = 200
+    boolean tryCatch = false
 }

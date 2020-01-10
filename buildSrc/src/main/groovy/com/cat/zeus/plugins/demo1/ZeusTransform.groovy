@@ -3,10 +3,7 @@ package com.cat.zeus.plugins.demo1
 import com.android.SdkConstants
 import com.android.build.api.transform.*
 import com.android.build.gradle.internal.pipeline.TransformManager
-import javassist.ClassPool
-import javassist.CtClass
-import javassist.CtMethod
-import javassist.Modifier
+import javassist.*
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
@@ -24,7 +21,7 @@ import java.util.jar.JarOutputStream
 import java.util.zip.ZipEntry
 
 class ZeusTransform extends Transform {
-    private static ThreadPoolExecutor executor;
+    private static ThreadPoolExecutor executor
 
     ExtraInfo extraInfo
     def pool = ClassPool.default
@@ -197,43 +194,7 @@ class ZeusTransform extends Transform {
         if (methods != null && methods.length > 0) {
             for (int i = 0; i < methods.length; i++) {
                 CtMethod method = methods[i]
-                if (!isNative(method) && !isEmpty(method)) {
-                    String name = method.getName()
-
-                    method.addLocalVariable("startTime", CtClass.longType)
-                    method.addLocalVariable("endTime", CtClass.longType)
-
-                    method.insertBefore("startTime = System.currentTimeMillis();")
-                    method.insertAfter("endTime = System.currentTimeMillis();")
-
-                    method.addLocalVariable("n", CtClass.longType)
-                    method.insertAfter("n = endTime - startTime;")
-                    String wthreshold = extraInfo.wthreshold + ""
-                    String ethreshold = extraInfo.ethreshold + ""
-
-                    String is = """android.util.Log.i("{0}","{1}#{2} total time: " + n);"""
-                    is = MessageFormat.format(
-                            is, extraInfo.tag, ctClass.simpleName, name
-                    )
-                    String ws = """android.util.Log.w("{0}","{1}#{2} total time: " + n);"""
-                    ws = MessageFormat.format(
-                            ws, extraInfo.tag, ctClass.simpleName, name
-                    )
-                    String es = """android.util.Log.e("{0}","{1}#{2} total time: " + n);"""
-                    es = MessageFormat.format(
-                            es, extraInfo.tag, ctClass.simpleName, name
-                    )
-
-                    StringBuffer sb = new StringBuffer()
-                    sb.append("if (n > " + ethreshold + ") {")
-                            .append(es)
-                            .append("} else if (n > " + wthreshold + ") {")
-                            .append(ws)
-                            .append("} else {")
-                            .append(is)
-                            .append("}")
-                    method.insertAfter(sb.toString())
-                }
+                addCode(method, ctClass)
             }
         }
     }
@@ -243,45 +204,92 @@ class ZeusTransform extends Transform {
         if (methods != null) {
             for (int i = 0; i < methods.length; i++) {
                 CtMethod method = methods[i]
-                if (!isNative(method) && !isEmpty(method)) {
-                    String name = method.getName()
-                    method.addLocalVariable("startTime", CtClass.longType)
-                    method.addLocalVariable("endTime", CtClass.longType)
-                    method.insertBefore("startTime = System.currentTimeMillis();")
-                    method.insertAfter("endTime = System.currentTimeMillis();")
+                addCode(method, ctClass)
+            }
+            ctClass.writeFile(fileName)
+            ctClass.detach()
+        }
+    }
 
-                    method.addLocalVariable("n", CtClass.longType)
-                    method.insertAfter("n = endTime - startTime;")
-                    String wthreshold = extraInfo.wthreshold + ""
-                    String ethreshold = extraInfo.ethreshold + ""
+    private void addCode(CtMethod method, CtClass ctClass) {
+        if (!isNative(method) && !isEmpty(method)) {
+            String name = method.getName()
+            method.addLocalVariable("startTime", CtClass.longType)
+            method.addLocalVariable("endTime", CtClass.longType)
+            method.insertBefore("startTime = System.currentTimeMillis();")
+            method.insertAfter("endTime = System.currentTimeMillis();")
 
-                    String is = """android.util.Log.i("{0}","{1}#{2} total time: " + n);"""
-                    is = MessageFormat.format(
-                            is, extraInfo.tag, ctClass.simpleName, name
-                    )
-                    String ws = """android.util.Log.w("{0}","{1}#{2} total time: " + n);"""
-                    ws = MessageFormat.format(
-                            ws, extraInfo.tag, ctClass.simpleName, name
-                    )
-                    String es = """android.util.Log.e("{0}","{1}#{2} total time: " + n);"""
-                    es = MessageFormat.format(
-                            es, extraInfo.tag, ctClass.simpleName, name
-                    )
+            method.addLocalVariable("n", CtClass.longType)
+            method.insertAfter("n = endTime - startTime;")
+            String wthreshold = extraInfo.wthreshold + ""
+            String ethreshold = extraInfo.ethreshold + ""
 
-                    StringBuffer sb = new StringBuffer()
-                    sb.append("if (n > " + ethreshold + ") {")
-                            .append(es)
-                            .append("} else if (n > " + wthreshold + ") {")
-                            .append(ws)
-                            .append("} else {")
-                            .append(is)
-                            .append("}")
-                    method.insertAfter(sb.toString())
-                }
+            String is = """android.util.Log.i("{0}","{1}#{2} total time: " + n);"""
+            is = MessageFormat.format(
+                    is, extraInfo.tag, ctClass.simpleName, name
+            )
+            String ws = """android.util.Log.w("{0}","{1}#{2} total time: " + n);"""
+            ws = MessageFormat.format(
+                    ws, extraInfo.tag, ctClass.simpleName, name
+            )
+            String es = """android.util.Log.e("{0}","{1}#{2} total time: " + n);"""
+            es = MessageFormat.format(
+                    es, extraInfo.tag, ctClass.simpleName, name
+            )
+
+            StringBuffer sb = new StringBuffer()
+            sb.append("if (n > " + ethreshold + ") {")
+                    .append(es)
+                    .append("} else if (n > " + wthreshold + ") {")
+                    .append(ws)
+                    .append("} else {")
+                    .append(is)
+                    .append("}")
+            method.insertAfter(sb.toString())
+
+            if (extraInfo.tryCatch) {
+                addTryCatch(method, ctClass)
             }
         }
-        ctClass.writeFile(fileName)
-        ctClass.detach()
+    }
+
+    private void addTryCatch(CtMethod origin_Method, CtClass c) {
+        if (c.isFrozen()) {
+            c.defrost()
+        }
+        String new_method_name = origin_Method.getName() + "_" + "Zeus_" + System.currentTimeMillis()
+        CtMethod ctMethod_New = CtNewMethod.copy(origin_Method, new_method_name, c, null)
+        c.addMethod(ctMethod_New)
+        int methodParameterLen = origin_Method.getParameterTypes().length
+        StringBuffer sb = new StringBuffer()
+        sb.append("{try{")
+        if (!origin_Method.getReturnType().getName().contains("void")) {
+            sb.append("return ")
+        }
+        sb.append(new_method_name)
+        sb.append("(")
+        for (int i = 0; i < methodParameterLen; i++) {
+            sb.append("\$" + (i + 1))
+            if (i != methodParameterLen - 1) {
+                sb.append(",")
+            }
+        }
+
+        String s = """android.util.Log.e("{0}","Exception: " + ex);"""
+        s = MessageFormat.format(s, extraInfo.tag)
+
+        sb.append(");}catch(Exception ex){ ")
+                .append(s)
+                .append("ex.printStackTrace();}")
+
+        if (!origin_Method.getReturnType().getName().contains("void")) {
+            sb.append("return ")
+            String result = getReturnValue(origin_Method.getReturnType().getName())
+            sb.append(result)
+            sb.append(";")
+        }
+        sb.append("}")
+        origin_Method.setBody(sb.toString())
     }
 
     private void findTarget(File dir, String fileName) {
@@ -300,5 +308,38 @@ class ZeusTransform extends Transform {
 
     private static boolean isEmpty(CtMethod method) {
         return method.isEmpty()
+    }
+
+    static String getReturnValue(String type) {
+        String result = "null"
+        switch (type) {
+            case "int":
+                result = "0"
+                break
+            case "long":
+                result = "0l"
+                break
+            case "double":
+                result = "0d"
+                break
+            case "float":
+                result = "0f"
+                break
+            case "boolean":
+                result = "true"
+                break
+            case "char":
+                result = "\'a\'"
+                break
+            case "short":
+                result = "0"
+                break
+            case "byte":
+                result = "0"
+                break
+            default:
+                break
+        }
+        return result
     }
 }
