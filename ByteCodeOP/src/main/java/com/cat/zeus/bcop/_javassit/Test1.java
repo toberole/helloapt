@@ -53,7 +53,20 @@ public class Test1 {
 
     public static void main(String[] args) {
         System.out.println("**************** main ****************");
-        test7();
+        test8();
+    }
+
+    private static void test8() {
+        try {
+            ClassPool pool = ClassPool.getDefault();
+            CtClass ctClass = pool.get("com.cat.zeus.bcop.A");
+            CtMethod origin_method = ctClass.getDeclaredMethod("m4");
+            // 相当于清空方法体
+            origin_method.setBody(";");
+            ctClass.writeFile(tempDir);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // 修改一个方法名字 在添加一个同名的方法
@@ -64,6 +77,8 @@ public class Test1 {
      * 修改带有UIThread注解方法，名字为method_extend
      * 第二步
      * 生成一个与带有UIThread注解方法一模一样的方法,在该方法中调用method_extend
+     * <p>
+     * CtNewMethod.copy()
      */
     public static void test7() {
         try {
@@ -71,9 +86,8 @@ public class Test1 {
             CtClass ctClass = pool.get("com.cat.zeus.bcop.A");
             CtMethod origin_method = ctClass.getDeclaredMethod("m4");
             String origin_method_name = origin_method.getName();
-
-
             CtClass returnType = origin_method.getReturnType();
+
             CtClass[] parameterTypes = origin_method.getParameterTypes();
             CtMethod extend_method = new CtMethod(returnType, origin_method_name + "_extend", parameterTypes, ctClass);
             extend_method.setModifiers(origin_method.getModifiers());
